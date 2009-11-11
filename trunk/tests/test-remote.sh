@@ -3,7 +3,7 @@
 . ../lib-remote.sh
 
 HOSTS=('www-data@ztest01' 'root@ztest01')
-LHOST='dev064'
+LHOST='dev065'
 
 LOCALHOST_PASS=''
 

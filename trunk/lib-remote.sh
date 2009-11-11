@@ -48,7 +48,7 @@ function copy_remote() {
       fi
     fi
     let REMOTESTATUS[${i}]=${?}
-    if [ ${REMOTESTATUS[${i}]} -ne 0 ]; then
+    if (( ${REMOTESTATUS[${i}]} )); then
       let ++rv
     fi
     let ++i
@@ -101,7 +101,7 @@ function exec_remote() {
       fi
     fi
     let REMOTESTATUS[${i}]=${?}
-    if [ ${REMOTESTATUS[${i}]} -ne 0 ]; then
+    if (( ${REMOTESTATUS[${i}]} )); then
       let ++rv
     fi
     let ++i
