@@ -29,7 +29,7 @@ function get_opts() {
   # Execute option gathering functions
   local args
   args=$(getopt -o "${opts_short}" -l "${opts_long}" -- "${@}")
-  if [ ${?} -ne 0 ]; then
+  if (( ${?} )); then
     echo 1>&2
     get_opts_print_usage 1>&2
     return -1
@@ -62,7 +62,7 @@ function get_opts() {
       fi
       let ++i
     done
-    if [ ${found} -eq 0 ]; then
+    if (( ! ${found} )); then
       echo "Invalid option: ${opt}" 1>&2
       echo 1>&2
       get_opts_print_usage 1>&2
@@ -94,7 +94,7 @@ function get_opts_str_arguments() {
       local opt="${opts_subarray[${j}]}"
       local opt_merged="${opt}"
       if [ ! -z "${OPTS_ARG[${i}]}" ]; then
-        if [ ${printargs} -eq 0 ]; then
+        if (( ! ${printargs} )); then
           opt_merged="${opt_merged}:"
         else
           opt_merged="${opt_merged} <${OPTS_ARG[${i}]}>"

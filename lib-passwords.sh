@@ -31,7 +31,7 @@ function get_passwords() {
 
   local let i=0;
   while [ "${PASSWORD_VARIABLES[${i}]}" != "" ]; do
-    if [ ${same_pass} -eq 0 ]; then
+    if (( ! ${same_pass} )); then
       pass=$(ask_pass "Password for ${PASSWORD_PROMPTS[${i}]}: ")
       echo
     fi

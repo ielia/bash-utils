@@ -24,7 +24,7 @@ function exit_on_pipe_error() {
 function exit_with_error() {
   local let rv=${1}
   local message="${2}"
-  if [ ${rv} -ne 0 ]; then
+  if (( ${rv} )); then
     log_err "${message}"
     log_err 'Aborting...'
     exit ${rv}
