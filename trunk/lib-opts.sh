@@ -1,19 +1,19 @@
 #!/bin/bash
 #
 # Required variables:
-#   * OPT_PREFIX_AR (prefix for the option variables)
-#   * OPT_PREFIX_FN (prefix for the option functions)
-#   * OPTS (option names array)
-#   * OPTS_ARG (option arguments array, sorted by OPTS)
-#   * OPTS_EXP (option descriptions array, sorted by OPTS)
-#   * ${OPT_PREFIX_AR}_${OPTS[@]} (command line options arrays per
+#   * GET_OPTS_PREFIX_AR (prefix for the option variables)
+#   * GET_OPTS_PREFIX_FN (prefix for the option functions)
+#   * GET_OPTS (option names array)
+#   * GET_OPTS_ARG (option arguments array, sorted by GET_OPTS)
+#   * GET_OPTS_EXP (option descriptions array, sorted by GET_OPTS)
+#   * ${GET_OPTS_PREFIX_AR}_${GET_OPTS[@]} (command line options arrays per
 #     	functionality)
 #
 # Required functions:
 #   * copy_array_by_varnames (lib-assoc_arrays.sh)
 #   * index_in_array (lib-assoc_arrays.sh)
-#   * ${OPT_PREFIX_FN}_${OPTS[@]} (option functions)
-#   * ${OPT_PREFIX_FN}_ (option function for the rest of the command line)
+#   * ${GET_OPTS_PREFIX_FN}_${GET_OPTS[@]} (option functions)
+#   * ${GET_OPTS_PREFIX_FN}_ (option function for the rest of the command line)
 #
 # Provided:
 #   * get_opts (commonly used as get_opts "${@}")
@@ -46,16 +46,16 @@ function get_opts() {
     local opt_stripped="${opt#-}"
     opt_stripped="${opt_stripped#-}"
     local let i=0
-    while [ ! -z "${OPTS[${i}]}" ]; do
+    while [ ! -z "${GET_OPTS[${i}]}" ]; do
       local let idx=$(index_in_array "${opt_stripped}" \
-      	"${OPT_PREFIX_AR}${OPTS[${i}]}")
+      	"${GET_OPTS_PREFIX_AR}${GET_OPTS[${i}]}")
       if [ ${idx} -ge 0 ]; then
         found=1
-        if [ -z "${OPTS_ARG[${i}]}" ]; then
-          eval "${OPT_PREFIX_FN}${OPTS[${i}]}"
+        if [ -z "${GET_OPTS_ARG[${i}]}" ]; then
+          eval "${GET_OPTS_PREFIX_FN}${GET_OPTS[${i}]}"
           shift
         else
-          eval "${OPT_PREFIX_FN}${OPTS[${i}]} \"\${next}\""
+          eval "${GET_OPTS_PREFIX_FN}${GET_OPTS[${i}]} \"\${next}\""
           shift 2
         fi
         break
@@ -69,7 +69,7 @@ function get_opts() {
       return -2
     fi
   done
-  eval "${OPT_PREFIX_FN} \"\${*}\""
+  eval "${GET_OPTS_PREFIX_FN} \"\${*}\""
   return 0
 }
 #------------------------------------------------------------------------------
@@ -85,19 +85,20 @@ function get_opts_str_arguments() {
   eval "${short}=''"
   eval "${long}=''"
   local let i=0
-  while [ ! -z "${OPTS[${i}]}" ]; do
+  while [ ! -z "${GET_OPTS[${i}]}" ]; do
     local opt
     local opts_subarray
-    copy_array_by_varnames "${OPT_PREFIX_AR}${OPTS[${i}]}" opts_subarray
+    copy_array_by_varnames "${GET_OPTS_PREFIX_AR}${GET_OPTS[${i}]}" \
+    	opts_subarray
     local let j=0
     while [ ! -z "${opts_subarray[${j}]}" ]; do
       local opt="${opts_subarray[${j}]}"
       local opt_merged="${opt}"
-      if [ ! -z "${OPTS_ARG[${i}]}" ]; then
+      if [ ! -z "${GET_OPTS_ARG[${i}]}" ]; then
         if (( ! ${printargs} )); then
           opt_merged="${opt_merged}:"
         else
-          opt_merged="${opt_merged} <${OPTS_ARG[${i}]}>"
+          opt_merged="${opt_merged} <${GET_OPTS_ARG[${i}]}>"
         fi
       fi
       if [ "${#opt}" -gt 1 ]; then
@@ -135,10 +136,10 @@ function get_opts_print_usage() {
 
   declare -a opt_specs comments
   local let i=0
-  while [ "${OPTS[${i}]}" ]; do
+  while [ "${GET_OPTS[${i}]}" ]; do
     local options=''
     declare -a op
-    copy_array_by_varnames "${OPT_PREFIX_AR}${OPTS[${i}]}" op
+    copy_array_by_varnames "${GET_OPTS_PREFIX_AR}${GET_OPTS[${i}]}" op
     local let j=0
     while [ ! -z "${op[${j}]}" ]; do
       if [ ${#op[${j}]} -gt 1 ]; then
@@ -149,13 +150,13 @@ function get_opts_print_usage() {
       let ++j
     done
     options="${options:2}"
-    if [ -z "${OPTS_ARG[${i}]}" ]; then
+    if [ -z "${GET_OPTS_ARG[${i}]}" ]; then
       opt_specs[${i}]=$(printf '    %s' "${options}")
     else
-      opt_specs[${i}]=$(printf '    %s %s' "${options}" "<${OPTS_ARG[${i}]}>")
+      opt_specs[${i}]=$(printf '    %s %s' "${options}" "<${GET_OPTS_ARG[${i}]}>")
     fi
     COLUMNS=${COLUMNS:-80}
-    comments[${i}]=$(echo "${OPTS_EXP[${i}]}" | \
+    comments[${i}]=$(echo "${GET_OPTS_EXP[${i}]}" | \
     	fold -s -w $((${COLUMNS}-${#opt_specs[${i}]}-3)) | sed -e 's/^/\t/g')
     echo "${opt_specs[${i}]}"
     echo "${comments[${i}]}"

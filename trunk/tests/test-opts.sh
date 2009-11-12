@@ -4,18 +4,18 @@
 . ../lib-opts.sh
 
 # Configuration ---------------------------------------------------------------
-OPT_PREFIX_AR='OPTS_AR_'
-OPT_PREFIX_FN='opts_fn_'
+GET_OPTS_PREFIX_AR='OPTS_AR_'
+GET_OPTS_PREFIX_FN='opts_fn_'
+
+GET_OPTS=(build branch help noupdate)
+GET_OPTS_ARG=('directory' 'name' '' '')
+GET_OPTS_EXP=('Specify the build directory' 'Specify the branch name' \
+	'This help' 'Do not perform any updates')
 
 OPTS_AR_branch=('branch')
 OPTS_AR_build=('b' 'build')
 OPTS_AR_help=('help')
 OPTS_AR_noupdate=('n' 'dont-update')
-
-OPTS=(build branch help noupdate)
-OPTS_ARG=('directory' 'name' '' '')
-OPTS_EXP=('Specify the build directory' 'Specify the branch name' \
-	'This help' 'Do not perform any updates')
 #------------------------------------------------------------------------------
 
 # Globals ---------------------------------------------------------------------
