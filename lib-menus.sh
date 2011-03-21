@@ -26,7 +26,7 @@ function print_menu() {
 function get_choice_number() {
   local choices=${1}
   local choice
-  read -p "${PS3}" -N 1 choice
+  read -p "${PS3}" -n 1 choice
   local choice_number=$(($(ord ${choice})-97))
   if [ ${choice_number} -lt 0 ]; then
     let choice_number+=32
